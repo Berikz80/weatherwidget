@@ -13,8 +13,9 @@ interface ForecastService {
     suspend fun loadForecast(
         @Query("lat")
         lat: Double,
-        @Query("sort_dir")
+        @Query("lon")
         lon: Double,
-
+        @Query("units")
+        units: String
     ): Response<ForecastResponse>
 }
