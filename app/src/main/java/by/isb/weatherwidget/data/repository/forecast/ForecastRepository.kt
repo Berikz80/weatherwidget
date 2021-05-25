@@ -16,8 +16,8 @@ class ForecastRepository {
         val response = api.loadForecast(lat,lon,units)
 
         return if (response.isSuccessful) {
-            response.body()?.dataIn?.map {
-                cryptoResponseMapper.map(it)
+            response.body()?.daily?.map {
+                forecastResponseMapper.map(it)
             }.orEmpty()
         } else {
             throw Throwable(response.errorBody().toString())

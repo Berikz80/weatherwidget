@@ -7,7 +7,7 @@ data class ForecastResponse(
     @SerializedName("current")
     val current: Current?,
     @SerializedName("daily")
-    val daily: List<Daily?>?,
+    val daily: List<Daily>,
     @SerializedName("hourly")
     val hourly: List<Hourly?>?,
     @SerializedName("lat")
