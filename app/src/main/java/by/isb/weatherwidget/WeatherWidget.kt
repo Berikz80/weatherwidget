@@ -4,6 +4,16 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.widget.RemoteViews
+import by.isb.weatherwidget.data.entities.forecast.Forecast
+import by.isb.weatherwidget.data.repository.forecast.ForecastRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 /**
  * Implementation of App Widget functionality.
@@ -37,6 +47,15 @@ class WeatherWidget : AppWidgetProvider() {
     }
 }
 
+private val forecastRepository = ForecastRepository()
+private val ioScope = CoroutineScope(Dispatchers.IO)
+
+var lat = 53.893009
+var lon = 53.893009
+var units = "metric"
+
+var forecasts = listOf<Forecast>()
+
 internal fun updateAppWidget(
     context: Context,
     appWidgetManager: AppWidgetManager,
@@ -45,8 +64,23 @@ internal fun updateAppWidget(
     val widgetText = loadTitlePref(context, appWidgetId)
     // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.weather_widget)
-    views.setTextViewText(R.id.appwidget_text, widgetText)
+
+    val dateMillis = (forecasts.get(0).date * 1000).toLong()
+
+    var dateTime = SimpleDateFormat("dd.mm").format(dateMillis).toString()
+
+    views.setTextViewText(R.id.day_1_number, dateTime)
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
+}
+
+fun loadForecast() {
+    ioScope.launch {
+        forecasts = forecastRepository.loadForecast(
+            lat,
+            lon,
+            units
+        )
+    }
 }
