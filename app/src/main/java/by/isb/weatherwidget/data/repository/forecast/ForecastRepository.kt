@@ -1,8 +1,5 @@
 package by.isb.weatherwidget.data.repository.forecast
 
-import by.isb.an07.hw8.data.mappers.crypto.CryptoResponseMapper
-import by.isb.an07.hw8.data.entities.crypto.Crypto
-import by.isb.an07.hw8.data.networking.crypto.CryptoApi
 import by.isb.weatherwidget.data.entities.forecast.Forecast
 import by.isb.weatherwidget.data.mappers.forecast.ForecastResponseMapper
 import by.isb.weatherwidget.data.networking.forecast.ForecastApi
