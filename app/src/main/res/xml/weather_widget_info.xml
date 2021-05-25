@@ -3,9 +3,9 @@
     android:configure="by.isb.weatherwidget.WeatherWidgetConfigureActivity"
     android:initialKeyguardLayout="@layout/weather_widget"
     android:initialLayout="@layout/weather_widget"
-    android:minWidth="250dp"
-    android:minHeight="40dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:minWidth="320dp"
+    android:minHeight="80dp"
+    android:previewImage="@drawable/weather"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="86400000"
-    android:widgetCategory="home_screen"></appwidget-provider>
+    android:widgetCategory="home_screen"/>

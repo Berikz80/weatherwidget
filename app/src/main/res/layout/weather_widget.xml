@@ -1,21 +1,216 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/appWidgetBackgroundColor"
+    android:layout_height="wrap_content"
     android:padding="@dimen/widget_margin"
-    android:theme="@style/ThemeOverlay.WeatherWidget.AppWidgetContainer">
+    android:theme="@style/ThemeOverlay.WeatherWidget.AppWidgetContainer"
+    tools:background="@color/black">
 
     <TextView
-        android:id="@+id/appwidget_text"
+        android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:background="?attr/appWidgetBackgroundColor"
-        android:contentDescription="@string/appwidget_text"
-        android:text="@string/appwidget_text"
-        android:textColor="?attr/appWidgetTextColor"
-        android:textSize="24sp"
-        android:textStyle="bold|italic" />
+        android:layout_alignStart="@+id/div"
+        android:fontFamily="sans-serif-condensed-light"
+        android:paddingVertical="@dimen/margin_normal"
+        tools:text="Минск"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
+
+    <ImageButton
+        android:id="@+id/item_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/margin_double"
+        android:background="@drawable/selector"
+        android:backgroundTint="#00000000"
+        android:paddingVertical="@dimen/margin_normal"
+        android:src="@drawable/ic_settings"
+        app:tint="@color/white" />
+
+    <ImageButton
+        android:id="@+id/item_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_double"
+        android:layout_toStartOf="@+id/item_setting"
+        android:background="@drawable/selector"
+        android:backgroundTint="#00000000"
+        android:paddingVertical="@dimen/margin_normal"
+        android:src="@drawable/ic_autorenew"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/div"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/item_setting"
+        android:layout_marginHorizontal="@dimen/margin_double"
+        android:background="@android:color/white" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@+id/div"
+        android:layout_alignStart="@+id/div"
+        android:layout_alignEnd="@+id/div"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/day_1"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_normal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/day_1_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-smallcaps"
+                android:gravity="center_horizontal"
+                tools:text="24.05"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/day_1_temperature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-smallcaps"
+                android:gravity="center_horizontal"
+                tools:text="22° / 17°"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/day_1_image"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/weather" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/day_2"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_normal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/day_2_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-smallcaps"
+                android:gravity="center_horizontal"
+                tools:text="24.05"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/day_2_temperature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-smallcaps"
+                android:gravity="center_horizontal"
+                tools:text="22° / 17°"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/day_2_image"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/weather" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/day_3"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_normal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/day_3_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-smallcaps"
+                android:gravity="center_horizontal"
+                tools:text="24.05"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/day_3_temperature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-smallcaps"
+                android:gravity="center_horizontal"
+                tools:text="22° / 17°"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/day_3_image"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/weather" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/day_4"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_normal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/day_4_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-smallcaps"
+                android:gravity="center_horizontal"
+                tools:text="24.05"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/day_4_temperature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-smallcaps"
+                android:gravity="center_horizontal"
+                tools:text="22° / 17°"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/day_4_image"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/weather" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>
+
