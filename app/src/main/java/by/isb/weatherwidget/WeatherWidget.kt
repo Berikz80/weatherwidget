@@ -1,9 +1,13 @@
 package by.isb.weatherwidget
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.widget.RemoteViews
+import androidx.lifecycle.MutableLiveData
 import by.isb.weatherwidget.data.entities.forecast.Forecast
 import by.isb.weatherwidget.data.repository.forecast.ForecastRepository
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +24,8 @@ import java.util.*
  * App Widget Configuration implemented in [WeatherWidgetConfigureActivity]
  */
 class WeatherWidget : AppWidgetProvider() {
+
+
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
@@ -39,6 +45,10 @@ class WeatherWidget : AppWidgetProvider() {
     }
 
     override fun onEnabled(context: Context) {
+
+        forecasts.observeForever {
+
+        }
         // Enter relevant functionality for when the first widget is created
     }
 
@@ -54,7 +64,7 @@ var lat = 53.893009
 var lon = 53.893009
 var units = "metric"
 
-var forecasts = listOf<Forecast>()
+var forecasts = MutableLiveData<List<Forecast>>()
 
 internal fun updateAppWidget(
     context: Context,
@@ -67,14 +77,32 @@ internal fun updateAppWidget(
     // Construct the RemoteViews object
 
     loadForecast()
-    
+
     val views = RemoteViews(context.packageName, R.layout.weather_widget)
 
-    val dateMillis = (forecasts.get(0).date * 1000).toLong()
+    val dateMillis = (forecasts.value?.get(0)?.date?.times(1000))?.toLong()
 
     var dateTime = SimpleDateFormat("dd.mm").format(dateMillis).toString()
 
     views.setTextViewText(R.id.day_1_number, dateTime)
+
+    // data output
+
+    val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, WeatherWidget::class.java))
+
+    val intent = Intent(context, WeatherWidget::class.java).apply {
+        action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+        putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+    }
+
+    val updateIntent = PendingIntent.getBroadcast(
+        context,
+        appWidgetId,
+        intent,
+        PendingIntent.FLAG_UPDATE_CURRENT
+    )
+
+    views.setOnClickPendingIntent(R.id.item_refresh, updateIntent)
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
@@ -82,10 +110,12 @@ internal fun updateAppWidget(
 
 fun loadForecast() {
     ioScope.launch {
-        forecasts = forecastRepository.loadForecast(
-            lat,
-            lon,
-            units
+        forecasts.postValue(
+            forecastRepository.loadForecast(
+                lat,
+                lon,
+                units
+            )
         )
     }
 }
