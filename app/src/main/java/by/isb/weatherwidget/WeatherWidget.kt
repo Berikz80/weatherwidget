@@ -61,8 +61,13 @@ internal fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-    val widgetText = loadTitlePref(context, appWidgetId)
+//    lat = loadTitlePref(context, appWidgetId,"lat").toDouble()
+//    lon = loadTitlePref(context, appWidgetId,"lon").toDouble()
+//    units = loadTitlePref(context, appWidgetId,"units")
     // Construct the RemoteViews object
+
+    loadForecast()
+    
     val views = RemoteViews(context.packageName, R.layout.weather_widget)
 
     val dateMillis = (forecasts.get(0).date * 1000).toLong()
