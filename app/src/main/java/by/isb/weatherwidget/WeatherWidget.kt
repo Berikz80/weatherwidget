@@ -25,12 +25,12 @@ import java.util.*
  */
 class WeatherWidget : AppWidgetProvider() {
 
-
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
+        loadForecast()
         // There may be multiple widgets active, so update all of them
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
@@ -46,9 +46,6 @@ class WeatherWidget : AppWidgetProvider() {
 
     override fun onEnabled(context: Context) {
 
-        forecasts.observeForever {
-
-        }
         // Enter relevant functionality for when the first widget is created
     }
 
@@ -64,7 +61,7 @@ var lat = 53.893009
 var lon = 53.893009
 var units = "metric"
 
-var forecasts = MutableLiveData<List<Forecast>>()
+var forecasts = listOf<Forecast>()
 
 internal fun updateAppWidget(
     context: Context,
@@ -76,11 +73,11 @@ internal fun updateAppWidget(
 //    units = loadTitlePref(context, appWidgetId,"units")
     // Construct the RemoteViews object
 
-    loadForecast()
+//    loadForecast()
 
     val views = RemoteViews(context.packageName, R.layout.weather_widget)
 
-    val dateMillis = (forecasts.value?.get(0)?.date?.times(1000))?.toLong()
+    val dateMillis = (forecasts.get(0)?.date?.times(1000))?.toLong()
 
     var dateTime = SimpleDateFormat("dd.mm").format(dateMillis).toString()
 
@@ -110,12 +107,10 @@ internal fun updateAppWidget(
 
 fun loadForecast() {
     ioScope.launch {
-        forecasts.postValue(
-            forecastRepository.loadForecast(
+            forecasts = forecastRepository.loadForecast(
                 lat,
                 lon,
                 units
             )
-        )
     }
 }
