@@ -7,17 +7,12 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
-import androidx.lifecycle.MutableLiveData
 import by.isb.weatherwidget.data.entities.forecast.Forecast
 import by.isb.weatherwidget.data.repository.forecast.ForecastRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 /**
  * Implementation of App Widget functionality.
@@ -30,7 +25,7 @@ class WeatherWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        loadForecast()
+        //   loadForecast()
         // There may be multiple widgets active, so update all of them
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
@@ -40,7 +35,7 @@ class WeatherWidget : AppWidgetProvider() {
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         // When the user deletes the widget, delete the preference associated with it.
         for (appWidgetId in appWidgetIds) {
-            deleteTitlePref(context, appWidgetId)
+            deletePref(context, appWidgetId)
         }
     }
 
@@ -57,8 +52,8 @@ class WeatherWidget : AppWidgetProvider() {
 private val forecastRepository = ForecastRepository()
 private val ioScope = CoroutineScope(Dispatchers.IO)
 
-var lat = 53.893009
-var lon = 53.893009
+var lat = 0.0
+var lon = 0.0
 var units = "metric"
 
 var forecasts = listOf<Forecast>()
@@ -68,20 +63,20 @@ internal fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-//    lat = loadTitlePref(context, appWidgetId,"lat").toDouble()
-//    lon = loadTitlePref(context, appWidgetId,"lon").toDouble()
-//    units = loadTitlePref(context, appWidgetId,"units")
+    lat = loadPref(context, appWidgetId, "lat")?.toDoubleOrNull() ?: 0.0
+    lon = loadPref(context, appWidgetId, "lon")?.toDoubleOrNull() ?: 0.0
+    units = loadPref(context, appWidgetId, "units") ?: "metric"
     // Construct the RemoteViews object
 
-//    loadForecast()
+    loadForecast()
 
     val views = RemoteViews(context.packageName, R.layout.weather_widget)
-
-    val dateMillis = (forecasts.get(0)?.date?.times(1000))?.toLong()
-
-    var dateTime = SimpleDateFormat("dd.mm").format(dateMillis).toString()
-
-    views.setTextViewText(R.id.day_1_number, dateTime)
+//
+//    val dateMillis = (forecasts.get(0)?.date?.times(1000))?.toLong()
+//
+//    var dateTime = SimpleDateFormat("dd.mm").format(dateMillis).toString()
+//
+//    views.setTextViewText(R.id.day_1_number, dateTime)
 
     // data output
 
@@ -107,10 +102,10 @@ internal fun updateAppWidget(
 
 fun loadForecast() {
     ioScope.launch {
-            forecasts = forecastRepository.loadForecast(
-                lat,
-                lon,
-                units
-            )
+        forecasts = forecastRepository.loadForecast(
+            lat,
+            lon,
+            units
+        )
     }
 }
