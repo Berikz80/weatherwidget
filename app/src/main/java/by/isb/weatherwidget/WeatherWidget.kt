@@ -12,6 +12,7 @@ import android.util.Log
 import android.widget.RemoteViews
 import by.isb.weatherwidget.data.entities.forecast.Forecast
 import by.isb.weatherwidget.data.repository.forecast.ForecastRepository
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -100,6 +101,8 @@ internal fun updateAppWidget(
 
     val views = RemoteViews(context.packageName, R.layout.weather_widget)
 
+    val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, WeatherWidget::class.java))
+
     ioScope.launch {
         for (i in 0..3) {
             views.setTextViewText(arrayDates[i], "-")
@@ -108,7 +111,6 @@ internal fun updateAppWidget(
         }
         loadForecast(lat, lon, units)
     }
-
 
 
     if (forecasts.isNotEmpty()) {
@@ -120,16 +122,22 @@ internal fun updateAppWidget(
             val dateTime = SimpleDateFormat("dd.MM").format(dateMillis).toString()
             views.setTextViewText(arrayDates[i], dateTime)
 
-            val temp = "${forecasts[i]?.min.toInt()} / ${forecasts[i]?.max.toInt()}"
+            val temp = "${forecasts[i]?.min.toInt()}C / ${forecasts[i]?.max.toInt()}C"
 
             views.setTextViewText(arrayTemperatures[i], temp)
 
-//            val icon = forecasts[i]?.icon
-//            views.setImageViewBitmap(arrayImages[i], getBitmap("http://openweathermap.org/img/wn/$icon.png"))
+            val icon = forecasts[i]?.icon
+
+            CoroutineScope(Dispatchers.IO).launch {
+                Picasso.get()
+                    .load("http://openweathermap.org/img/wn/$icon.png")
+                    .error(R.drawable.ic_autorenew)
+                    .into(views, arrayImages[i], ids)
+            }
+
         }
     }
 
-    val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, WeatherWidget::class.java))
 
     val intent = Intent(context, WeatherWidget::class.java).apply {
         action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
@@ -166,5 +174,6 @@ suspend fun loadForecast(lat: Double, lon: Double, units: String) {
             lon,
             units
         )
+
     }
 }
