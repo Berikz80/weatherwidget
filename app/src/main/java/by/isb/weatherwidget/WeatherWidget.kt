@@ -12,6 +12,7 @@ import by.isb.weatherwidget.data.repository.forecast.ForecastRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 
 /**
@@ -68,17 +69,11 @@ internal fun updateAppWidget(
     units = loadPref(context, appWidgetId, "units") ?: "metric"
     // Construct the RemoteViews object
 
-    loadForecast()
+    ioScope.launch {
+        loadForecast(context)
+    }
 
     val views = RemoteViews(context.packageName, R.layout.weather_widget)
-//
-//    val dateMillis = (forecasts.get(0)?.date?.times(1000))?.toLong()
-//
-//    var dateTime = SimpleDateFormat("dd.mm").format(dateMillis).toString()
-//
-//    views.setTextViewText(R.id.day_1_number, dateTime)
-
-    // data output
 
     val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, WeatherWidget::class.java))
 
@@ -100,12 +95,17 @@ internal fun updateAppWidget(
     appWidgetManager.updateAppWidget(appWidgetId, views)
 }
 
-fun loadForecast() {
-    ioScope.launch {
+suspend fun loadForecast(context : Context) {
+    withContext(ioScope.coroutineContext) {
         forecasts = forecastRepository.loadForecast(
             lat,
             lon,
             units
         )
     }
+
+    val views = RemoteViews(context.packageName, R.layout.weather_widget)
+    val dateMillis = (forecasts.get(0)?.date?.times(1000))?.toLong()
+    var dateTime = SimpleDateFormat("dd.mm").format(dateMillis).toString()
+    views.setTextViewText(R.id.day_1_number, dateTime)
 }
