@@ -39,9 +39,9 @@ data class ForecastResponse(
         @SerializedName("sunset")
         val sunset: Int?,
         @SerializedName("temp")
-        val temp: Int?,
+        val temp: Double?,
         @SerializedName("uvi")
-        val uvi: Int?,
+        val uvi: Double?,
         @SerializedName("visibility")
         val visibility: Int?,
         @SerializedName("weather")
@@ -161,9 +161,9 @@ data class ForecastResponse(
         @SerializedName("rain")
         val rain: Rain?,
         @SerializedName("temp")
-        val temp: Int?,
+        val temp: Double?,
         @SerializedName("uvi")
-        val uvi: Int?,
+        val uvi: Double?,
         @SerializedName("visibility")
         val visibility: Int?,
         @SerializedName("weather")

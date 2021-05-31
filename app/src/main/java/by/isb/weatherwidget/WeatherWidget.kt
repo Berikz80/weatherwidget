@@ -104,8 +104,10 @@ suspend fun loadForecast(context : Context) {
         )
     }
 
-    val views = RemoteViews(context.packageName, R.layout.weather_widget)
-    val dateMillis = (forecasts.get(0)?.date?.times(1000))?.toLong()
-    var dateTime = SimpleDateFormat("dd.mm").format(dateMillis).toString()
-    views.setTextViewText(R.id.day_1_number, dateTime)
+    if (forecasts.isNotEmpty()) {
+        val views = RemoteViews(context.packageName, R.layout.weather_widget)
+        val dateMillis = (forecasts.get(0)?.date?.times(1000))?.toLong()
+        var dateTime = SimpleDateFormat("dd.mm").format(dateMillis).toString()
+        views.setTextViewText(R.id.day_1_number, dateTime)
+    }
 }
