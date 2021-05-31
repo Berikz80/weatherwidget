@@ -6,6 +6,9 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Log
 import android.widget.RemoteViews
 import by.isb.weatherwidget.data.entities.forecast.Forecast
 import by.isb.weatherwidget.data.repository.forecast.ForecastRepository
@@ -13,7 +16,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.BufferedInputStream
+import java.io.IOException
+import java.io.InputStream
+import java.net.URL
+import java.net.URLConnection
 import java.text.SimpleDateFormat
+
 
 /**
  * Implementation of App Widget functionality.
@@ -68,12 +77,6 @@ internal fun updateAppWidget(
     units = loadPref(context, appWidgetId, "units") ?: "metric"
     // Construct the RemoteViews object
 
-    ioScope.launch {
-        loadForecast(lat,lon,units)
-    }
-
-    val views = RemoteViews(context.packageName, R.layout.weather_widget)
-
     val arrayDates = arrayOf(
         R.id.day_1_number,
         R.id.day_2_number,
@@ -88,9 +91,29 @@ internal fun updateAppWidget(
         R.id.day_4_temperature
     )
 
+    val arrayImages = arrayOf(
+        R.id.day_1_image,
+        R.id.day_2_image,
+        R.id.day_3_image,
+        R.id.day_4_image
+    )
+
+    val views = RemoteViews(context.packageName, R.layout.weather_widget)
+
+    ioScope.launch {
+        for (i in 0..3) {
+            views.setTextViewText(arrayDates[i], "-")
+            views.setTextViewText(arrayTemperatures[i], "-")
+
+        }
+        loadForecast(lat, lon, units)
+    }
+
+
+
     if (forecasts.isNotEmpty()) {
 
-        views.setTextViewText(R.id.location,"$lat / $lon")
+        views.setTextViewText(R.id.location, "$lat / $lon")
 
         for (i in 0..3) {
             val dateMillis = (forecasts[i]?.date?.times(1000))
@@ -98,12 +121,12 @@ internal fun updateAppWidget(
             views.setTextViewText(arrayDates[i], dateTime)
 
             val temp = "${forecasts[i]?.min.toInt()} / ${forecasts[i]?.max.toInt()}"
+
             views.setTextViewText(arrayTemperatures[i], temp)
 
-
-
+//            val icon = forecasts[i]?.icon
+//            views.setImageViewBitmap(arrayImages[i], getBitmap("http://openweathermap.org/img/wn/$icon.png"))
         }
-
     }
 
     val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, WeatherWidget::class.java))
@@ -126,7 +149,7 @@ internal fun updateAppWidget(
     appWidgetManager.updateAppWidget(appWidgetId, views)
 }
 
-suspend fun loadForecast(lat:Double, lon:Double, units:String) {
+suspend fun loadForecast(lat: Double, lon: Double, units: String) {
     withContext(ioScope.coroutineContext) {
         forecasts = forecastRepository.loadForecast(
             lat,
