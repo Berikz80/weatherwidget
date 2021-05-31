@@ -70,8 +70,8 @@ class WeatherWidgetConfigureActivity : Activity() {
             return
         }
 
-       appWidgetLat.setText(loadPref(this@WeatherWidgetConfigureActivity, appWidgetId, "lat"))
-       appWidgetLon.setText(loadPref(this@WeatherWidgetConfigureActivity, appWidgetId, "lon"))
+ //      appWidgetLat.setText(loadPref(this@WeatherWidgetConfigureActivity, appWidgetId, "lat"))
+   //    appWidgetLon.setText(loadPref(this@WeatherWidgetConfigureActivity, appWidgetId, "lon"))
     }
 
 }

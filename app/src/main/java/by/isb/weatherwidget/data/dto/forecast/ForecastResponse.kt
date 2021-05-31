@@ -71,7 +71,7 @@ data class ForecastResponse(
         @SerializedName("dew_point")
         val dewPoint: Double?,
         @SerializedName("dt")
-        val dt: Int?,
+        val dt: Long?,
         @SerializedName("feels_like")
         val feelsLike: FeelsLike?,
         @SerializedName("humidity")
@@ -155,7 +155,7 @@ data class ForecastResponse(
         @SerializedName("humidity")
         val humidity: Int?,
         @SerializedName("pop")
-        val pop: Int?,
+        val pop: Double?,
         @SerializedName("pressure")
         val pressure: Int?,
         @SerializedName("rain")

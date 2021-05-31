@@ -75,6 +75,38 @@ internal fun updateAppWidget(
 
     val views = RemoteViews(context.packageName, R.layout.weather_widget)
 
+    val arrayDates = arrayOf(
+        R.id.day_1_number,
+        R.id.day_2_number,
+        R.id.day_3_number,
+        R.id.day_4_number
+    )
+
+    val arrayTemperatures = arrayOf(
+        R.id.day_1_temperature,
+        R.id.day_2_temperature,
+        R.id.day_3_temperature,
+        R.id.day_4_temperature
+    )
+
+
+    if (forecasts.isNotEmpty()) {
+
+        views.setTextViewText(R.id.location,"$lat / $lon")
+
+        for (i in 0..3) {
+            val dateMillis = (forecasts.get(i)?.date?.times(1000))
+            val dateTime = SimpleDateFormat("dd.MM").format(dateMillis).toString()
+            views.setTextViewText(arrayDates[i], dateTime)
+
+            val temp = "${forecasts.get(i)?.min.toInt()} / ${forecasts.get(i)?.max.toInt()}"
+            views.setTextViewText(arrayTemperatures[i], temp)
+
+        }
+
+    }
+
+
     val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, WeatherWidget::class.java))
 
     val intent = Intent(context, WeatherWidget::class.java).apply {
@@ -104,10 +136,5 @@ suspend fun loadForecast(context : Context) {
         )
     }
 
-    if (forecasts.isNotEmpty()) {
-        val views = RemoteViews(context.packageName, R.layout.weather_widget)
-        val dateMillis = (forecasts.get(0)?.date?.times(1000))?.toLong()
-        var dateTime = SimpleDateFormat("dd.mm").format(dateMillis).toString()
-        views.setTextViewText(R.id.day_1_number, dateTime)
-    }
+
 }
