@@ -6,28 +6,36 @@
     android:padding="16dp">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_lat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:hint="lat">
-
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_lat"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content"
+            android:text="53.904541"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_lon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="lon">
-
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_lon"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="27.561523"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="units">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_units"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="metric"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <RadioGroup
