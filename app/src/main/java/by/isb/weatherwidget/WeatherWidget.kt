@@ -149,8 +149,8 @@ internal fun updateAppWidget(
     val settingsIntent = PendingIntent.getActivity(
         context,
         appWidgetId,
-        Intent(context,WeatherWidgetConfigureActivity::class.java),
-        PendingIntent.FLAG_IMMUTABLE
+        Intent(context, WeatherWidgetConfigureActivity::class.java),
+        PendingIntent.FLAG_UPDATE_CURRENT
     )
 
     views.setOnClickPendingIntent(R.id.item_setting, settingsIntent)
