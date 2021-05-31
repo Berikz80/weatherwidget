@@ -10,7 +10,7 @@ class ForecastRepository {
     private val forecastResponseMapper = ForecastResponseMapper()
 
     suspend fun loadForecast(lat: Double, lon: Double, units: String): List<Forecast> {
-        val response = api.loadForecast(lat,lon,units)
+        val response = api.loadForecast(lat, lon, units)
 
         return if (response.isSuccessful) {
             response.body()?.daily?.map {

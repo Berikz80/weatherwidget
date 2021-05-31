@@ -26,7 +26,6 @@ class WeatherWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        //   loadForecast()
         // There may be multiple widgets active, so update all of them
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
@@ -64,13 +63,13 @@ internal fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-    lat = loadPref(context, appWidgetId, "lat")?.toDoubleOrNull() ?: 0.0
-    lon = loadPref(context, appWidgetId, "lon")?.toDoubleOrNull() ?: 0.0
+    lat = loadPref(context, appWidgetId, "lat")?.toDouble() ?: 0.0
+    lon = loadPref(context, appWidgetId, "lon")?.toDouble() ?: 0.0
     units = loadPref(context, appWidgetId, "units") ?: "metric"
     // Construct the RemoteViews object
 
     ioScope.launch {
-        loadForecast(context)
+        loadForecast(lat,lon,units)
     }
 
     val views = RemoteViews(context.packageName, R.layout.weather_widget)
@@ -89,23 +88,23 @@ internal fun updateAppWidget(
         R.id.day_4_temperature
     )
 
-
     if (forecasts.isNotEmpty()) {
 
         views.setTextViewText(R.id.location,"$lat / $lon")
 
         for (i in 0..3) {
-            val dateMillis = (forecasts.get(i)?.date?.times(1000))
+            val dateMillis = (forecasts[i]?.date?.times(1000))
             val dateTime = SimpleDateFormat("dd.MM").format(dateMillis).toString()
             views.setTextViewText(arrayDates[i], dateTime)
 
-            val temp = "${forecasts.get(i)?.min.toInt()} / ${forecasts.get(i)?.max.toInt()}"
+            val temp = "${forecasts[i]?.min.toInt()} / ${forecasts[i]?.max.toInt()}"
             views.setTextViewText(arrayTemperatures[i], temp)
+
+
 
         }
 
     }
-
 
     val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, WeatherWidget::class.java))
 
@@ -127,7 +126,7 @@ internal fun updateAppWidget(
     appWidgetManager.updateAppWidget(appWidgetId, views)
 }
 
-suspend fun loadForecast(context : Context) {
+suspend fun loadForecast(lat:Double, lon:Double, units:String) {
     withContext(ioScope.coroutineContext) {
         forecasts = forecastRepository.loadForecast(
             lat,
@@ -135,6 +134,4 @@ suspend fun loadForecast(context : Context) {
             units
         )
     }
-
-
 }
